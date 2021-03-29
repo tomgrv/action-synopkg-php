@@ -1,0 +1,25 @@
+name: 'Synology Package for PHP'
+description: 'Create Synology Package for php application'
+inputs:
+  app-dir: 
+    description: 'Application root directory'
+    required: true
+    default: 'app'
+  www-dir:  
+    description: 'Application public directory'
+    required: true
+    default: 'public'
+outputs:
+  spk-file:
+    description: "Synology Package file"
+    value: ${{ steps.make-spk.outputs.spk-file }}
+runs:
+  using: "composite"
+  steps:
+    - id: make-pkg
+      run: ${{ github.action_path }}/src/make_pkg.sh ${{ github.action_path }}/.tmp ${{ github.action_path }}/.spk ${{ inputs.app-dir }}
+      shell: bash
+    - id: make-spk
+      run: ${{ github.action_path }}/src/make_spk.sh ${{ github.action_path }}/.tmp ${{ github.action_path }}/.spk ${{ inputs.app-dir }} ${{ inputs.www-dir }} myphpapp
+      shell: bash
+
